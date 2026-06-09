@@ -1,417 +1,62 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Beatriz Jiménez — Global COO &amp; Executive Director</title>
-    <style>
-        /* --- CONFIGURACIÓN Y VARIABLES --- */
-        :root {
-            --bg-color: #0b0d11;       /* Fondo oscuro sofisticado */
-            --card-bg: #12151c;        /* Contenedores sutiles */
-            --text-main: #e2e8f0;      /* Texto principal */
-            --text-muted: #8a99ad;     /* Texto secundario */
-            --accent: #38bdf8;         /* Turquesa/azul tecnológico */
-            --accent-hover: #7dd3fc;   
-            --max-width: 760px;        
-        }
-
-        /* --- ESTILOS BASE --- */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            line-height: 1.6;
-            padding: 3rem 1.5rem;
-        }
-
-        .container {
-            max-width: var(--max-width);
-            margin: 0 auto;
-        }
-
-        /* --- ENLACES Y UTILIDADES --- */
-        a {
-            color: var(--accent);
-            text-decoration: none;
-            transition: color 0.2s ease;
-        }
-
-        a:hover {
-            color: var(--accent-hover);
-            text-decoration: underline;
-        }
-
-        .text-muted {
-            color: var(--text-muted);
-        }
-
-        /* --- CABECERA --- */
-        header {
-            margin-bottom: 4rem;
-            margin-top: 1rem;
-        }
-
-        h1 {
-            font-size: 2.6rem;
-            font-weight: 700;
-            letter-spacing: -0.03em;
-            margin-bottom: 0.4rem;
-            color: #ffffff;
-        }
-
-        .subtitle {
-            font-size: 1.25rem;
-            color: var(--text-muted);
-            font-weight: 400;
-        }
-
-        .location {
-            font-size: 0.95rem;
-            margin-top: 0.5rem;
-            color: var(--text-muted);
-        }
-
-        /* --- SECCIONES --- */
-        section {
-            margin-bottom: 4rem;
-        }
-
-        h2 {
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.2em;
-            color: var(--text-muted);
-            margin-bottom: 1.8rem;
-            border-bottom: 1px solid #1e2330;
-            padding-bottom: 0.6rem;
-        }
-
-        p {
-            margin-bottom: 1.2rem;
-            font-size: 1.05rem;
-            color: #cbd5e1;
-        }
-
-        /* --- GRID DE COMPETENCIAS --- */
-        .skills-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 1.5rem;
-            margin-top: 1rem;
-        }
-
-        .skill-card {
-            background: var(--card-bg);
-            padding: 1.2rem;
-            border-radius: 6px;
-            border: 1px solid #1e2330;
-        }
-
-        .skill-card h3 {
-            font-size: 0.95rem;
-            color: #ffffff;
-            margin-bottom: 0.5rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .skill-card p {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            margin-bottom: 0;
-        }
-
-        /* --- LISTAS / TIMELINES --- */
-        .timeline {
-            list-style: none;
-        }
-
-        .timeline-item {
-            margin-bottom: 2.2rem;
-        }
-
-        .time-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            margin-bottom: 0.3rem;
-        }
-
-        .role-title {
-            font-weight: 600;
-            font-size: 1.15rem;
-            color: #ffffff;
-        }
-
-        .company {
-            color: var(--accent);
-            font-weight: 500;
-        }
-
-        .date-badge {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            font-variant-numeric: tabular-nums;
-        }
-
-        .description {
-            font-size: 0.95rem;
-            color: #94a3b8;
-        }
-
-        /* --- FORMACIÓN Y CERTS (DOS COLUMNAS) --- */
-        .education-layout {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2.5rem;
-        }
-
-        .edu-column h3 {
-            font-size: 1.05rem;
-            color: #ffffff;
-            margin-bottom: 1.2rem;
-            font-weight: 600;
-        }
-
-        .edu-item {
-            margin-bottom: 1.2rem;
-        }
-
-        .edu-title {
-            font-weight: 600;
-            font-size: 0.95rem;
-            color: #e2e8f0;
-        }
-
-        .edu-institution {
-            font-size: 0.9rem;
-            color: var(--accent);
-        }
-
-        .edu-meta {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
-
-        /* --- PROYECTOS PARALELOS --- */
-        .projects-list {
-            list-style: none;
-        }
-
-        .project-item {
-            margin-bottom: 1.2rem;
-        }
-
-        .project-name {
-            font-weight: 600;
-            color: #ffffff;
-        }
-
-        /* --- FOOTER --- */
-        footer {
-            margin-top: 6rem;
-            padding-top: 2rem;
-            border-top: 1px solid #1e2330;
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 1.5rem;
-            font-size: 0.95rem;
-        }
-
-        .social-links {
-            display: flex;
-            gap: 1.5rem;
-        }
-
-        /* --- RESPONSIVE --- */
-        @media (max-width: 680px) {
-            body { padding: 2rem 1rem; }
-            h1 { font-size: 2.1rem; }
-            .time-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .date-badge { margin-top: 0.2rem; margin-bottom: 0.4rem; }
-            .education-layout {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-            }
-        }
-    </style>
-</head>
-<body>
-
-    <div class="container">
-
-        <header>
-            <h1>Beatriz Jiménez</h1>
-            <div class="subtitle">Global COO &amp; Executive Director — Technology &amp; Operations</div>
-            <div class="location">Madrid, Spain &nbsp;|&nbsp; <a href="mailto:bea@beajimenez.net">bea@beajimenez.net</a></div>
-        </header>
-
-        <section id="summary">
-            <h2>Profile</h2>
-            <p>Executive leader with over 20 years of experience in technology consulting, start-ups, and international operations[cite: 4]. Expert in scaling organizations, M&amp;A integration, and digital transformation, managing cross-functional teams and complex P&amp;L across Europe and LatAm[cite: 5].</p>
-        </section>
-
-        <section id="competencies">
-            <h2>Core Competencies</h2>
-            <div class="skills-grid">
-                <div class="skill-card">
-                    <h3>Strategic Leadership</h3>
-                    <p>Operations Management, M&amp;A Integration, International Expansion, Stakeholder Management[cite: 9].</p>
-                </div>
-                <div class="skill-card">
-                    <h3>Technology &amp; Data</h3>
-                    <p>Generative AI (Leader Cert.), Data Science, Automation (Python / Google Apps Script), ERP/SAP[cite: 10].</p>
-                </div>
-                <div class="skill-card">
-                    <h3>Operational Excellence</h3>
-                    <p>Process Optimization (Six Sigma), Supply Chain, Aftersales Strategy, KPIs &amp; Reporting[cite: 11].</p>
-                </div>
+<section id="education">
+    <h2>Education &amp; Credentials</h2>
+    <div class="education-layout">
+        
+        <div class="edu-column">
+            <h3>Executive Education</h3>
+            
+            <div class="edu-item">
+                <div class="edu-title">Executive Program for Women in Senior Management (Promociona)</div>
+                <div class="edu-institution">ESADE Business School</div>
+                <div class="edu-meta">2024 — 2025</div>
             </div>
-        </section>
 
-        <section id="experience">
-            <h2>Executive Experience</h2>
-            <ul class="timeline">
-                
-                <li class="timeline-item">
-                    <div class="time-header">
-                        <span class="role-title">Global COO &mdash; <span class="company">SNGULAR</span></span>
-                        <span class="date-badge">2021 — 2026</span>
-                    </div>
-                    <p class="description">Directed global operations overseeing People, Internal Communication, PMO, and CTO Office (~1500 people)[cite: 16]. Executed the integration of 4 companies through successful M&amp;A processes and drove internal data automation and system synchronization[cite: 17, 18].</p>
-                </li>
-
-                <li class="timeline-item">
-                    <div class="time-header">
-                        <span class="role-title">Business Director (C-level) &mdash; <span class="company">ENDADO</span></span>
-                        <span class="date-badge">2020 — 2021</span>
-                    </div>
-                    <p class="description">Led commercial operations, category management, and purchasing strategy[cite: 23]. Developed cross-company processes for supplier onboarding, pricing updates, and automated data analysis systems[cite: 23, 24].</p>
-                </li>
-
-                <li class="timeline-item">
-                    <div class="time-header">
-                        <span class="role-title">Head of Sales Operations &amp; Product &mdash; <span class="company">AUTO1 GROUP</span></span>
-                        <span class="date-badge">2017 — 2020</span>
-                    </div>
-                    <p class="description">Managed a multidisciplinary team of 32 people across Aftersales, Customer Care, IT Support, and Business Analysis for Spain and Portugal[cite: 26]. Automated strategic reporting using Python and designed core transaction products[cite: 27, 28].</p>
-                </li>
-
-                <li class="timeline-item">
-                    <div class="time-header">
-                        <span class="role-title">Aftersales &amp; Commercial Operations Director &mdash; <span class="company">BULTACO MOTORS</span></span>
-                        <span class="date-badge">2014 — 2017</span>
-                    </div>
-                    <p class="description">Managed full sales cycles, negotiated international financial agreements, launched the Dealer Area DMS globally, and expanded market reach by signing distributors in 48 countries[cite: 31, 32, 33, 34].</p>
-                </li>
-
-                <li class="timeline-item">
-                    <div class="time-header">
-                        <span class="role-title">Innovation and Robotics Director &mdash; <span class="company">MUNDO READER (BQ)</span></span>
-                        <span class="date-badge">2013</span>
-                    </div>
-                    <p class="description">Founded the 3D Printing Department, established manufacturing in Spain, and negotiated distribution rights with MakerBot[cite: 37]. Designed industrial automation processes using anthropomorphic robots[cite: 38].</p>
-                </li>
-
-            </ul>
-        </section>
-
-        <section id="education">
-            <h2>Education &amp; Credentials</h2>
-            <div class="education-layout">
-                
-                <div class="edu-column">
-                    <h3>Executive Education</h3>
-                    
-                    <div class="edu-item">
-                        <div class="edu-title">Executive Program for Women in Senior Management (Promociona)</div>
-                        <div class="edu-institution">ESADE Business School</div>
-                        <div class="edu-meta">2024 — 2025 [cite: 45]</div>
-                    </div>
-
-                    <div class="edu-item">
-                        <div class="edu-title">Executive MBA (EMBA)</div>
-                        <div class="edu-institution">IE Business School</div>
-                        <div class="edu-meta">2010 — 2011 [cite: 45, 46]</div>
-                    </div>
-
-                    <div class="edu-item">
-                        <div class="edu-title">MSc. Information Technology (INFOTECH)</div>
-                        <div class="edu-institution">Universität Stuttgart</div>
-                        <div class="edu-meta">Germany &nbsp;|&nbsp; 2001 — 2003 </div>
-                    </div>
-
-                    <div class="edu-item">
-                        <div class="edu-title">Telecommunication Engineering</div>
-                        <div class="edu-institution">Universidad Politécnica de Madrid</div>
-                        <div class="edu-meta">1997 — 2003 </div>
-                    </div>
-                </div>
-
-                <div class="edu-column">
-                    <h3>Certifications &amp; Skills</h3>
-                    
-                    <div class="edu-item">
-                        <div class="edu-title">Cloud Digital Leader</div>
-                        <div class="edu-institution">Google Cloud</div>
-                        <div class="edu-meta">2024 [cite: 51]</div>
-                    </div>
-
-                    <div class="edu-item">
-                        <div class="edu-title">Generative AI Leader</div>
-                        <div class="edu-institution">Google</div>
-                        <div class="edu-meta">2026 [cite: 51]</div>
-                    </div>
-
-                    <div class="edu-item">
-                        <div class="edu-title">Data Science Bootcamp</div>
-                        <div class="edu-institution">IE Business School</div>
-                        <div class="edu-meta">[cite: 51]</div>
-                    </div>
-
-                    <div class="edu-item">
-                        <div class="edu-title">Six Sigma Yellow Belt</div>
-                        <div class="edu-institution">Operational Excellence</div>
-                        <div class="edu-meta">[cite: 51]</div>
-                    </div>
-                </div>
-
+            <div class="edu-item">
+                <div class="edu-title">Executive MBA (EMBA)</div>
+                <div class="edu-institution">IE Business School</div>
+                <div class="edu-meta">2010 — 2011</div>
             </div>
-        </section>
 
-        <section id="side-projects">
-            <h2>Side Projects &amp; Engagement</h2>
-            <ul class="projects-list">
-                <li class="project-item">
-                    <span class="project-name">TRGCon</span> <span class="text-muted">&mdash; Event Manager and Chief Brella Officer (2019 - Present)[cite: 55].</span>
-                </li>
-                <li class="project-item">
-                    <span class="project-name"><a href="https://teacht3ch.com" target="_blank" rel="noopener">TeachT3ch.com</a></span> <span class="text-muted">&mdash; Mentor and core member for non-profit web programming training[cite: 56].</span>
-                </li>
-            </ul>
-        </section>
-
-        <footer>
-            <div class="social-links">
-                <a href="https://www.linkedin.com/in/beatrizjimenez/" target="_blank" rel="noopener">LinkedIn</a>
-                <a href="https://github.com/tu-usuario" target="_blank" rel="noopener">GitHub</a>
-                <a href="mailto:bea@beajimenez.net">Email</a>
+            <div class="edu-item">
+                <div class="edu-title">MSc. Information Technology (INFOTECH)</div>
+                <div class="edu-institution">Universität Stuttgart</div>
+                <div class="edu-meta">Germany &nbsp;|&nbsp; 2001 — 2003</div>
             </div>
-            <span class="text-muted" style="font-size: 0.85rem;">&copy; 2026 Beatriz Jiménez. Built with minimal HTML/CSS.</span>
-        </footer>
+
+            <div class="edu-item">
+                <div class="edu-title">Telecommunication Engineering</div>
+                <div class="edu-institution">Universidad Politécnica de Madrid</div>
+                <div class="edu-meta">1997 — 2003</div>
+            </div>
+        </div>
+
+        <div class="edu-column">
+            <h3>Certifications &amp; Skills</h3>
+            
+            <div class="edu-item">
+                <div class="edu-title">Cloud Digital Leader</div>
+                <div class="edu-institution">Google Cloud</div>
+                <div class="edu-meta">2024</div>
+            </div>
+
+            <div class="edu-item">
+                <div class="edu-title">Generative AI Leader</div>
+                <div class="edu-institution">Google</div>
+                <div class="edu-meta">2026</div>
+            </div>
+
+            <div class="edu-item">
+                <div class="edu-title">Data Science Bootcamp</div>
+                <div class="edu-institution">IE Business School</div>
+                <div class="edu-meta"></div>
+            </div>
+
+            <div class="edu-item">
+                <div class="edu-title">Six Sigma Yellow Belt</div>
+                <div class="edu-institution">Operational Excellence</div>
+                <div class="edu-meta"></div>
+            </div>
+        </div>
 
     </div>
-
-</body>
-</html>
+</section>
