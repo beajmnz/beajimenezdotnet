@@ -11,6 +11,19 @@
             display: grid;
             grid-template-columns: 140px repeat(6, 1fr);
         }
+        /* Logo popover shown when hovering a square */
+        .has-logo { transition: border-color .15s ease, background-color .15s ease; }
+        .has-logo:hover { border-color: rgb(236 72 153 / .6); background-color: rgb(30 41 59 / .8); }
+        #logo-pop {
+            position: fixed; z-index: 50; pointer-events: none;
+            display: flex; align-items: center; gap: 16px;
+            padding: 12px 16px; border-radius: 12px;
+            background: #fff; box-shadow: 0 10px 30px rgb(0 0 0 / .5);
+            opacity: 0; transform: translateY(4px);
+            transition: opacity .15s ease, transform .15s ease;
+        }
+        #logo-pop.show { opacity: 1; transform: translateY(0); }
+        #logo-pop img { height: 48px; width: auto; max-width: 150px; object-fit: contain; display: block; border-radius: 4px; }
     </style>
 </head>
 <body class="bg-slate-950 text-slate-100 p-6 font-sans">
@@ -118,48 +131,48 @@
                 <!-- ROW 1: STUDIES -->
                 <div class="flex items-center text-xs font-bold text-slate-300 py-3"><i class="fas fa-graduation-cap w-6 text-slate-500"></i> Education</div>
                 <div class="bg-slate-800/40 p-3 rounded-lg border border-slate-800 text-xs">
-                    <span class="font-bold text-white block">UPM</span>
+                    <span class="font-bold text-white block" data-logo="logos/upm.svg">UPM</span>
                     <span class="text-slate-400 text-[11px]">Telecom Engineering</span>
-                    <span class="font-bold text-white block mt-1">Univ. Stuttgart</span>
+                    <span class="font-bold text-white block mt-1" data-logo="logos/uni-stuttgart.svg">Univ. Stuttgart</span>
                     <span class="text-slate-400 text-[11px]">MSc INFOTECH</span>
                 </div>
                 <div class="bg-slate-800/20 rounded-lg"></div>
                 <div class="bg-slate-800/40 p-3 rounded-lg border border-slate-800 text-xs">
-                    <span class="font-bold text-white block">IE Business School</span>
+                    <span class="font-bold text-white block" data-logo="logos/ie.svg">IE Business School</span>
                     <span class="text-slate-400 text-[11px]">Executive MBA (EMBA)</span>
                 </div>
                 <div class="bg-slate-800/20 rounded-lg"></div>
                 <div class="bg-slate-800/40 p-3 rounded-lg border border-slate-800 text-xs">
-                    <span class="font-bold text-white block">IE Business School</span>
+                    <span class="font-bold text-white block" data-logo="logos/ie.svg">IE Business School</span>
                     <span class="text-slate-400 text-[11px]">Data Science Bootcamp</span>
                 </div>
                 <div class="bg-slate-800/40 p-3 rounded-lg border border-slate-800 text-xs">
-                    <span class="font-bold text-white block">ESADE</span>
+                    <span class="font-bold text-white block" data-logo="logos/esade.png">ESADE</span>
                     <span class="text-slate-400 text-[11px]">Promociona Senior Executive</span>
                 </div>
 
                 <!-- ROW 2: CORPORATES & TECH -->
                 <div class="flex items-center text-xs font-bold text-slate-300 py-3"><i class="fas fa-building w-6 text-slate-500"></i> Corporate & Tech</div>
                 <div class="bg-slate-800/40 p-3 rounded-lg border border-slate-800 text-xs">
-                    <span class="font-bold text-white block">SONY Europe</span>
+                    <span class="font-bold text-white block" data-logo="logos/sony.svg">SONY Europe</span>
                     <span class="text-slate-400 text-[11px]">Intern / Working Student</span>
                 </div>
                 <div class="bg-slate-800/40 p-3 rounded-lg border border-slate-800 text-xs">
-                    <span class="font-bold text-white block">SONY Europe</span>
+                    <span class="font-bold text-white block" data-logo="logos/sony.svg">SONY Europe</span>
                     <span class="text-slate-400 text-[11px]">Software & R&D Engineer</span>
-                    <span class="font-bold text-white block mt-1">INDRA</span>
+                    <span class="font-bold text-white block mt-1" data-logo="logos/indra.svg">INDRA</span>
                     <span class="text-slate-400 text-[11px]">Systems Engineer</span>
                 </div>
                 <div class="bg-slate-800/40 p-3 rounded-lg border border-slate-800 text-xs">
-                    <span class="font-bold text-white block">INDRA</span>
+                    <span class="font-bold text-white block" data-logo="logos/indra.svg">INDRA</span>
                     <span class="text-slate-400 text-[11px]">Project Manager</span>
-                    <span class="font-bold text-white block mt-1">Grupo Tecopy</span>
+                    <span class="font-bold text-white block mt-1" data-logo="logos/tecopy.webp" data-logo-bg="#0f172a">Grupo Tecopy</span>
                     <span class="text-slate-400 text-[11px]">International Director</span>
                 </div>
                 <div class="bg-slate-800/20 rounded-lg"></div>
                 <div class="bg-slate-800/20 rounded-lg"></div>
                 <div class="bg-blue-950/40 p-3 rounded-lg border border-blue-900/50 text-xs">
-                    <span class="font-bold text-blue-200 block">SNGULAR</span>
+                    <span class="font-bold text-blue-200 block" data-logo="logos/sngular.svg">SNGULAR</span>
                     <span class="text-blue-400 font-semibold text-[11px]">Global COO</span>
                     <span class="text-slate-400 text-[10px] block mt-1">Operations, People, PMO & CTO Office</span>
                 </div>
@@ -170,35 +183,35 @@
                 <div class="bg-slate-800/20 rounded-lg"></div>
                 <div class="bg-slate-800/20 rounded-lg"></div>
                 <div class="bg-slate-800/40 p-3 rounded-lg border border-slate-800 text-xs">
-                    <span class="font-bold text-white block">Mundo Reader (bq)</span>
+                    <span class="font-bold text-white block" data-logo="logos/bq.svg">Mundo Reader (bq)</span>
                     <span class="text-slate-400 text-[11px]">Innovation & Robotics Dir.</span>
-                    <span class="font-bold text-white block mt-1">Bultaco Motors</span>
+                    <span class="font-bold text-white block mt-1" data-logo="logos/bultaco.png">Bultaco Motors</span>
                     <span class="text-slate-400 text-[11px]">Aftersales & Ops Dir.</span>
                 </div>
                 <div class="bg-slate-800/40 p-3 rounded-lg border border-slate-800 text-xs">
-                    <span class="font-bold text-white block">AUTO1 Group</span>
+                    <span class="font-bold text-white block" data-logo="logos/auto1.svg">AUTO1 Group</span>
                     <span class="text-slate-400 text-[11px]">Head of Sales Ops (ES/PT)</span>
-                    <span class="font-bold text-white block mt-1">Endado</span>
+                    <span class="font-bold text-white block mt-1" data-logo="logos/endado.svg">Endado</span>
                     <span class="text-slate-400 text-[11px]">Business Director</span>
                 </div>
                 <div class="bg-slate-800/40 p-3 rounded-lg border border-slate-800 text-xs">
-                    <span class="font-bold text-white block">MyBooking</span>
+                    <span class="font-bold text-white block" data-logo="logos/mybooking-icon.png, logos/mybooking.png">MyBooking</span>
                     <span class="text-slate-400 text-[11px]">Advisor</span>
                 </div>
 
                 <!-- ROW 4: ENTREPRENEUR & VENTURES -->
                 <div class="flex items-center text-xs font-bold text-slate-300 py-3"><i class="fas fa-lightbulb w-6 text-slate-500"></i> Entrepreneur</div>
                 <div class="bg-slate-800/40 p-3 rounded-lg border border-slate-800 text-xs">
-                    <span class="font-bold text-white block">Farmavida.com</span>
+                    <span class="font-bold text-white block" data-logo-domain="farmavida.com">Farmavida.com</span>
                     <span class="text-slate-400 text-[11px]">Co-Founder</span>
                 </div>
                 <div class="bg-slate-800/20 rounded-lg"></div>
                 <div class="bg-slate-800/40 p-3 rounded-lg border border-slate-800 text-xs">
-                    <span class="font-bold text-white block">TiendaMB / TiendaSmart</span>
+                    <span class="font-bold text-white block" data-logo="logos/tiendamb.jpg, logos/tiendasmart.png">TiendaMB / TiendaSmart</span>
                     <span class="text-slate-400 text-[11px]">Founder & Operations</span>
                 </div>
                 <div class="bg-slate-800/40 p-3 rounded-lg border border-slate-800 text-xs">
-                    <span class="font-bold text-white block">Km77.com</span>
+                    <span class="font-bold text-white block" data-logo="logos/km77.png">Km77.com</span>
                     <span class="text-slate-400 text-[11px]">E-Commerce Manager</span>
                 </div>
                 <div class="bg-slate-800/20 rounded-lg"></div>
@@ -211,32 +224,32 @@
                 <div class="bg-slate-800/20 rounded-lg"></div>
                 <div class="bg-slate-800/20 rounded-lg"></div>
                 <div class="bg-slate-800/40 p-3 rounded-lg border border-slate-800 text-xs">
-                    <span class="font-bold text-white block">TarugoConf</span>
+                    <span class="font-bold text-white block" data-logo="logos/trgcon.png">TarugoConf</span>
                     <span class="text-slate-400 text-[11px]">Volunteer / Event Mgr</span>
                 </div>
                 <div class="bg-slate-800/40 p-3 rounded-lg border border-slate-800 text-xs">
-                    <span class="font-bold text-white block">TeachT3ch</span>
+                    <span class="font-bold text-white block" data-logo="logos/teacht3ch.jpg">TeachT3ch</span>
                     <span class="text-slate-400 text-[11px]">Mentor & Sel.Committee</span>
-                    <span class="font-bold text-white block mt-1">TarugoConf</span>
+                    <span class="font-bold text-white block mt-1" data-logo="logos/trgcon.png">TarugoConf</span>
                     <span class="text-slate-400 text-[11px]">Chief Brella Officer</span>
                 </div>
 
                 <!-- ROW 6: HONORS & CERTS -->
                 <div class="flex items-center text-xs font-bold text-slate-300 py-3"><i class="fas fa-award w-6 text-slate-500"></i> Certs & Honors</div>
                 <div class="bg-slate-800/40 p-3 rounded-lg border border-slate-800 text-xs">
-                    <span class="text-slate-400 text-[11px]">Erasmus & Rogelio Segovia Scholarships</span>
+                    <span class="text-slate-400 text-[11px]" data-logo="logos/fundetel.png">Erasmus & Rogelio Segovia Scholarships</span>
                 </div>
                 <div class="bg-slate-800/40 p-3 rounded-lg border border-slate-800 text-xs">
                     <span class="text-slate-400 text-[11px]">ISO-9001 Thesis Mention</span>
                 </div>
                 <div class="bg-slate-800/40 p-3 rounded-lg border border-slate-800 text-xs">
-                    <span class="text-slate-400 text-[11px]">LiderA Scholarship (IE EMBA)</span>
+                    <span class="text-slate-400 text-[11px]" data-logo="logos/lidera.jpg">LiderA Scholarship (IE EMBA)</span>
                 </div>
                 <div class="bg-slate-800/40 p-3 rounded-lg border border-slate-800 text-xs">
                 </div>
                 <div class="bg-slate-800/20 rounded-lg"></div>
                 <div class="bg-emerald-950/40 p-3 rounded-lg border border-emerald-900/50 text-xs">
-                    <span class="font-bold text-emerald-200 block">Google Cloud</span>
+                    <span class="font-bold text-emerald-200 block" data-logo="logos/google-cloud.svg">Google Cloud</span>
                     <span class="text-emerald-400 text-[11px] block">Digital Leader (2024)</span>
                     <span class="text-emerald-400 font-semibold text-[11px] block">GenAI Leader (2026)</span>
                 </div>
@@ -244,6 +257,75 @@
             </div>
         </div>
     </div>
+
+    <div id="logo-pop" aria-hidden="true"></div>
+    <script>
+        // Shows the logo(s) of the organisations named in a square while the mouse is over it.
+        // Each name carries data-logo-domain; data-logo points to a file in logos/; names with only data-logo-domain fall back to the site's icon.
+        (function () {
+            var pop = document.getElementById('logo-pop');
+            var cache = {};
+
+            // data-logo may list several files separated by commas.
+            function logosFor(el) {
+                var srcs = el.dataset.logo
+                    ? el.dataset.logo.split(',').map(function (s) { return s.trim(); })
+                    : ['https://www.google.com/s2/favicons?sz=128&domain=' + encodeURIComponent(el.dataset.logoDomain)];
+                return srcs.map(function (src) { return logoFor(el, src); });
+            }
+
+            function logoFor(el, src) {
+                if (!cache[src]) {
+                    var img = new Image();
+                    img.alt = el.textContent.trim();
+                    // Logos drawn in white need a dark backdrop to be visible on the white card.
+                    if (el.dataset.logoBg) { img.style.background = el.dataset.logoBg; img.style.padding = '8px 10px'; img.style.borderRadius = '8px'; img.style.boxSizing = 'border-box'; }
+                    // The icon service answers with a tiny generic globe when it has no logo: treat that as missing.
+                    img.onload = function () { img.dataset.ok = img.naturalWidth > 16 ? '1' : '0'; refresh(); };
+                    img.onerror = function () { img.dataset.ok = '0'; refresh(); };
+                    img.src = src;
+                    cache[src] = img;
+                }
+                return cache[src];
+            }
+
+            var current = null;
+
+            function refresh() {
+                if (!current) return;
+                pop.replaceChildren();
+                var seen = {};
+                current.querySelectorAll('[data-logo-domain], [data-logo]').forEach(function (el) {
+                    logosFor(el).forEach(function (img) {
+                        if (img.dataset.ok === '1' && !seen[img.src]) { seen[img.src] = true; pop.appendChild(img); }
+                    });
+                });
+                if (!pop.children.length) { pop.classList.remove('show'); return; }
+                var r = current.getBoundingClientRect();
+                var w = pop.offsetWidth, h = pop.offsetHeight;
+                var left = Math.min(Math.max(8, r.left + r.width / 2 - w / 2), window.innerWidth - w - 8);
+                var top = r.top - h - 8;
+                if (top < 8) top = r.bottom + 8;
+                pop.style.left = left + 'px';
+                pop.style.top = top + 'px';
+                pop.classList.add('show');
+            }
+
+            function hide() { current = null; pop.classList.remove('show'); }
+
+            var squares = new Set();
+            document.querySelectorAll('[data-logo-domain], [data-logo]').forEach(function (el) {
+                logosFor(el); // preload
+                squares.add(el.parentElement);
+            });
+            squares.forEach(function (sq) {
+                sq.classList.add('has-logo');
+                sq.addEventListener('mouseenter', function () { current = sq; refresh(); });
+                sq.addEventListener('mouseleave', hide);
+            });
+            window.addEventListener('scroll', hide, true);
+        })();
+    </script>
 
 </body>
 </html>
