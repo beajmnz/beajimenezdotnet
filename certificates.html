@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beatriz Jiménez - Learning Timeline</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* The vertical line of the timeline and the dot of each entry */
+        .year-block { position: relative; padding-left: 28px; }
+        .year-block::before {
+            content: ""; position: absolute; left: 7px; top: 14px; bottom: -32px;
+            width: 2px; background: rgb(30 41 59);
+        }
+        .year-block:last-child::before { bottom: 0; }
+        .year-dot {
+            position: absolute; left: 0; top: 8px; width: 16px; height: 16px; border-radius: 9999px;
+            background: rgb(2 6 23); border: 3px solid rgb(236 72 153);
+        }
+        .cert { transition: border-color .15s ease, background-color .15s ease; }
+        .cert:hover { border-color: rgb(236 72 153 / .6); background-color: rgb(30 41 59 / .8); }
+        .cert.has-scan { cursor: zoom-in; }
+        .chip[aria-pressed="true"] { background: rgb(236 72 153); border-color: rgb(236 72 153); color: #fff; }
+        #lightbox { display: none; }
+        #lightbox.show { display: flex; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 p-4 sm:p-6 font-sans">
+
+    <div class="max-w-[1200px] mx-auto bg-slate-900 p-5 sm:p-8 rounded-3xl shadow-2xl border border-slate-800">
+
+        <!-- HEADER SECTION -->
+        <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-8 pb-8 border-b border-slate-800">
+            <div class="flex items-center gap-6">
+                <div class="w-24 h-24 rounded-full bg-slate-800 overflow-hidden border-2 border-slate-700 flex-shrink-0">
+                    <img src="foto_linkedin.jpg" alt="Beatriz Jiménez" class="w-full h-full object-cover">
+                </div>
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-widest text-pink-500">Learning Timeline • Degrees & Certificates</span>
+                    <h1 class="text-4xl font-black text-white tracking-tight">Beatriz Jiménez</h1>
+                    <p class="text-slate-400 text-sm mt-1 font-medium">
+                        <a href="index.html" class="hover:text-white underline decoration-slate-600">Home</a> •
+                        <a href="matrix.html" class="hover:text-white underline decoration-slate-600">Career Matrix</a>
+                    </p>
+                </div>
+            </div>
+
+            <!-- TOP METRICS (filled in from the data below) -->
+            <div class="grid grid-cols-3 gap-4 w-full lg:w-auto">
+                <div class="bg-slate-800/60 p-4 rounded-xl border border-slate-700/60">
+                    <span id="stat-count" class="text-3xl font-black text-white block">–</span>
+                    <span class="text-xs text-slate-400 font-semibold uppercase">Certificates</span>
+                </div>
+                <div class="bg-slate-800/60 p-4 rounded-xl border border-slate-700/60">
+                    <span id="stat-years" class="text-3xl font-black text-white block">–</span>
+                    <span class="text-xs text-slate-400 font-semibold uppercase">Years learning<br><span id="stat-span" class="text-[10px] text-slate-500 font-normal"></span></span>
+                </div>
+                <div class="bg-slate-800/60 p-4 rounded-xl border border-slate-700/60">
+                    <span id="stat-issuers" class="text-3xl font-black text-white block">–</span>
+                    <span class="text-xs text-slate-400 font-semibold uppercase">Institutions</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- CATEGORY FILTER -->
+        <div id="filters" class="flex flex-wrap gap-2 mb-10" role="group" aria-label="Filter by topic"></div>
+
+        <!-- TIMELINE -->
+        <div id="timeline" class="space-y-8"></div>
+        <p id="empty" class="hidden text-slate-500 text-sm">No certificates in this topic.</p>
+    </div>
+
+    <!-- Viewer for certificate scans (only used by entries that have a "scan") -->
+    <div id="lightbox" class="fixed inset-0 z-50 bg-black/80 items-center justify-center p-6" role="dialog" aria-modal="true" aria-label="Certificate scan">
+        <img id="lightbox-img" src="" alt="" class="max-w-full max-h-full rounded-lg shadow-2xl bg-white">
+    </div>
+
+    <script>
+        // Topics: label, Font Awesome icon and Tailwind colour classes.
+        var TOPICS = {
+            degree:   { label: 'Degrees & Executive',     icon: 'fa-graduation-cap', text: 'text-pink-300',    badge: 'bg-pink-950 border-pink-800 text-pink-300' },
+            data:     { label: 'Data & AI',               icon: 'fa-brain',          text: 'text-emerald-300', badge: 'bg-emerald-950 border-emerald-800 text-emerald-300' },
+            pm:       { label: 'Project Mgmt & Agile',    icon: 'fa-diagram-project',text: 'text-blue-300',    badge: 'bg-blue-950 border-blue-800 text-blue-300' },
+            people:   { label: 'Leadership & People',     icon: 'fa-users',          text: 'text-amber-300',   badge: 'bg-amber-950 border-amber-800 text-amber-300' },
+            business: { label: 'Business & Operations',   icon: 'fa-briefcase',      text: 'text-violet-300',  badge: 'bg-violet-950 border-violet-800 text-violet-300' },
+            tech:     { label: 'Technology',              icon: 'fa-microchip',      text: 'text-cyan-300',    badge: 'bg-cyan-950 border-cyan-800 text-cyan-300' },
+            lang:     { label: 'Languages',               icon: 'fa-language',       text: 'text-rose-300',    badge: 'bg-rose-950 border-rose-800 text-rose-300' }
+        };
+
+        // One entry per certificate.
+        //   date:   'YYYY-MM-DD', 'YYYY-MM' or 'YYYY'
+        //   note:   optional extra detail (hours, grade, level…)
+        //   url:    optional link to the certificate on the issuer's site — the card then shows a "Verify" link
+        //   scan:   optional image of the certificate, e.g. 'certificates/prince2.jpg' — the card then opens it on click
+        var CERTS = [
+            { date: '2026-03-02', topic: 'data',     title: 'Generative AI Leader Certification', issuer: 'Google Cloud', note: 'Valid until March 2029', url: 'https://www.credly.com/badges/2ddb7ac5-6658-40aa-93b0-8906e62c99ae' },
+            { date: '2025-06-18', topic: 'degree',   title: 'Promociona — Executive Programme for Women in Senior Management', issuer: 'ESADE Business School', note: '12th edition, 2023–2025', url: 'https://credentials.esade.edu/landing/682f1effaac1811f8c4bbb14', scan: 'certificates/esade-promociona.jpg' },
+            { date: '2024-08-08', topic: 'tech',     title: 'Google Cloud Certified Cloud Digital Leader', issuer: 'Google Cloud', note: 'Valid until August 2027', url: 'https://www.credly.com/badges/10a23ff9-e4c6-4e09-974a-aa018e0d9967' },
+            { date: '2024-07',    topic: 'tech',     title: 'IT Service Management Technical Delivery Accreditation', issuer: 'Atlassian' },
+            { date: '2023-02-21', topic: 'lang',     title: 'English Proficiency Test', issuer: 'goFLUENT', note: 'CEFR level C2', scan: 'certificates/gofluent-english.jpg' },
+            { date: '2022-03',    topic: 'tech',     title: 'Vault Fundamentals', issuer: 'Thought Machine', url: 'https://certificates.thoughtmachine.net/d8fa89a7-1c2c-46e2-9ba3-f213d96401d1' },
+            { date: '2021-09-21', topic: 'tech',     title: 'Understanding Jira', issuer: 'Udemy', url: 'https://www.udemy.com/certificate/UC-4fd9c09e-66a0-4b7b-aa8c-c436c9b4cf9e/', scan: 'certificates/udemy-jira.jpg' },
+            { date: '2021-07-15', topic: 'degree',   title: 'Data Science Bootcamp', issuer: 'IE University', note: 'University private degree', scan: 'certificates/ie-bootcamp.jpg' },
+            { date: '2021-06-01', topic: 'data',     title: 'Introduction to Statistics for Machine Learning with Python', issuer: 'Escuela de Datos Vivos', scan: 'certificates/datosvivos-stats.jpg' },
+            { date: '2020-05-06', topic: 'tech',     title: 'Internet Security Specialist', issuer: 'Subsidised professional training (IFCM004PO)', note: '30 hours' },
+            { date: '2020-03-15', topic: 'data',     title: 'Machine Learning with Python: A Practical Introduction', issuer: 'IBM · edX', note: 'Verified certificate', url: 'https://courses.edx.org/certificates/b2ebac0e5195411aa528f6ab95f3bc97', scan: 'certificates/edx-ibm-ml.jpg' },
+            { date: '2020-02-28', topic: 'lang',     title: 'Portuguese A2', issuer: 'Wake Up Formación', note: 'Two in-person courses' },
+            { date: '2019-09-28', topic: 'data',     title: 'Learn SQL', issuer: 'Instituto Tecnológico Telefónica · Miríadax', note: '24 hours', scan: 'certificates/miriadax-sql.jpg' },
+            { date: '2019-05-19', topic: 'data',     title: 'Executive Data Science Specialization', issuer: 'Johns Hopkins University · Coursera', url: 'https://www.coursera.org/account/accomplishments/specialization/G9BK92GDV2YS' },
+            { date: '2019-05-05', topic: 'data',     title: 'Managing Data Analysis', issuer: 'Johns Hopkins University · Coursera', url: 'https://www.coursera.org/account/accomplishments/verify/43MP2964T4CD', scan: 'certificates/coursera-managing-data.jpg' },
+            { date: '2019-04-28', topic: 'data',     title: 'Building a Data Science Team', issuer: 'Johns Hopkins University · Coursera', url: 'https://www.coursera.org/account/accomplishments/verify/2TENKFEKQ3N6', scan: 'certificates/coursera-ds-team.jpg' },
+            { date: '2019-04-21', topic: 'data',     title: 'A Crash Course in Data Science', issuer: 'Johns Hopkins University · Coursera', url: 'https://www.coursera.org/account/accomplishments/verify/WYPZ2PLQBYXJ' },
+            { date: '2018-12-26', topic: 'data',     title: 'Introduction to Machine Learning', issuer: 'Universitas Telefónica · Miríadax', scan: 'certificates/miriadax-ml.jpg' },
+            { date: '2018-09-22', topic: 'tech',     title: 'General Data Protection Regulation (GDPR)', issuer: 'Ayuntamiento de Torrejón de Ardoz', note: '20 hours' },
+            { date: '2018-06-06', topic: 'people',   title: 'Team Leadership and Coaching', issuer: 'Subsidised professional training (ADGD067PO)', note: '25 hours' },
+            { date: '2018-04-29', topic: 'data',     title: 'Data Analysis with Pandas and Python', issuer: 'Udemy', url: 'https://www.udemy.com/certificate/UC-F8RBXP4Y/', scan: 'certificates/udemy-pandas.jpg' },
+            { date: '2018-04-12', topic: 'people',   title: 'Coaching: People Development', issuer: 'INSEM', note: '40 hours' },
+            { date: '2017-08-09', topic: 'people',   title: 'Conflict Resolution', issuer: 'Udemy', url: 'https://www.udemy.com/certificate/UC-CYVLIVR3/', scan: 'certificates/udemy-conflict.jpg' },
+            { date: '2017-03-06', topic: 'pm',       title: 'Project Management with Agile Methodologies and Lean Approaches', issuer: 'Universitas Telefónica · Miríadax', scan: 'certificates/miriadax-agile.jpg' },
+            { date: '2017-01-05', topic: 'tech',     title: 'SEO: Organic Search Engine Positioning', issuer: 'Universitat de Vic (UVic-UCC) · Miríadax', scan: 'certificates/miriadax-seo.jpg' },
+            { date: '2016-12-25', topic: 'tech',     title: 'Learn WordPress the Easy Way', issuer: 'Universitas Telefónica · Miríadax', note: '30 hours', scan: 'certificates/miriadax-wordpress.jpg' },
+            { date: '2016-11-25', topic: 'business', title: 'Invoicing and Stock Control', issuer: 'Ayuntamiento de Torrejón de Ardoz', note: '20 hours' },
+            { date: '2016-11-20', topic: 'people',   title: 'Business Coach', issuer: 'Udemy', url: 'https://www.udemy.com/certificate/UC-C2E056MA/', scan: 'certificates/udemy-business-coach.jpg' },
+            { date: '2016-11-18', topic: 'pm',       title: 'How to Build Awesome Agile Teams with Scrum, Kanban and Extreme Programming', issuer: 'Udemy', url: 'https://www.udemy.com/certificate/UC-IAK0ALFE/', scan: 'certificates/udemy-agile-teams.jpg' },
+            { date: '2016-11-17', topic: 'pm',       title: 'Introduction to Project Management', issuer: 'Udemy', url: 'https://www.udemy.com/certificate/UC-P7WP185H/', scan: 'certificates/udemy-intro-pm.jpg' },
+            { date: '2016-11-06', topic: 'pm',       title: 'Agile & Scrum Overview', issuer: 'Udemy', url: 'https://www.udemy.com/certificate/UC-VRORHHAQ/', scan: 'certificates/udemy-agile-scrum.jpg' },
+            { date: '2016-11-05', topic: 'pm',       title: 'Outsourcing & Remote Teams', issuer: 'Udemy', url: 'https://www.udemy.com/certificate/UC-QJPUA5SB/', scan: 'certificates/udemy-outsourcing.jpg' },
+            { date: '2016-09-18', topic: 'pm',       title: 'Six Sigma Yellow Belt', issuer: '6sigmastudy · Udemy', url: 'https://www.udemy.com/certificate/UC-IT0PG5U5/', scan: 'certificates/udemy-six-sigma.jpg' },
+            { date: '2015-07-30', topic: 'tech',     title: 'Introduction to Cloud Computing', issuer: 'IEEEx · edX', scan: 'certificates/edx-cloud.jpg' },
+            { date: '2015-06-24', topic: 'business', title: 'Basic Competence in Social Media', issuer: 'Alkeno', scan: 'certificates/alkeno-social.jpg' },
+            { date: '2014-12-09', topic: 'tech',     title: 'Advanced Excel 2010', issuer: 'Ayuntamiento de Torrejón de Ardoz', note: '25 hours' },
+            { date: '2013-07-23', topic: 'business', title: 'An Introduction to Operations Management', issuer: 'University of Pennsylvania (Wharton) · Coursera', scan: 'certificates/coursera-operations.jpg' },
+            { date: '2012-11-30', topic: 'business', title: 'Internationalisation', issuer: 'ASICMA', note: '70 hours', scan: 'certificates/asicma-internationalisation.jpg' },
+            { date: '2011-07-22', topic: 'degree',   title: 'Executive MBA', issuer: 'IE Business School', scan: 'certificates/ie-emba.jpg' },
+            { date: '2011-07-22', topic: 'pm',       title: 'Project Management at Indra I (MIGP)', issuer: 'Indra', note: '2 hours' },
+            { date: '2011-06-14', topic: 'pm',       title: 'Project Planning and Control', issuer: 'Indra', note: '15 hours' },
+            { date: '2010-12-10', topic: 'tech',     title: 'MIDAS — Indra Method for Development, Adaptation and Services', issuer: 'Indra', note: '6 hours' },
+            { date: '2010-04-19', topic: 'tech',     title: 'Introduction to SAP', issuer: 'Indra', note: '4 hours' },
+            { date: '2010-04-15', topic: 'pm',       title: 'PRINCE2® Foundation', issuer: 'APM Group', note: 'Exam passed · 21-hour course by Quint Wellington Redwood', scan: 'certificates/prince2.jpg' },
+            { date: '2009-10-16', topic: 'people',   title: 'Problem Analysis', issuer: 'Indra', note: '16 hours' },
+            { date: '2009-05-27', topic: 'people',   title: 'Organisation and Motivation of Work Teams', issuer: 'Fundación del Metal para la Formación', note: '50 hours · grade: notable', scan: 'certificates/fm-teams.jpg' },
+            { date: '2009-05-06', topic: 'people',   title: 'Decision Making', issuer: 'Indra' },
+            { date: '2009-04-15', topic: 'pm',       title: 'Project Management', issuer: 'Fundación del Metal para la Formación', note: '100 hours · grade: outstanding', scan: 'certificates/fm-projects.jpg' },
+            { date: '2008-12-12', topic: 'pm',       title: 'Quality Engineering', issuer: 'Fundación del Metal para la Formación', note: '270 hours', scan: 'certificates/fm-quality.jpg' },
+            { date: '2008-10-02', topic: 'lang',     title: 'Portuguese 2 and 3', issuer: 'Universität Stuttgart · Sprachenzentrum', note: 'Courses taken in 2003' },
+            { date: '2008-05-07', topic: 'people',   title: 'Team Leadership and Management', issuer: 'CEIM — Confederación Empresarial de Madrid', note: '65 hours', scan: 'certificates/ceim-teams.jpg' },
+            { date: '2008-05-06', topic: 'pm',       title: 'Project Management', issuer: 'Universidad Politécnica de Madrid (GIO-ETSIT)', note: '100 hours' },
+            { date: '2008-02-21', topic: 'business', title: 'Basic Financial Accounting', issuer: 'CEIM — Confederación Empresarial de Madrid', note: '50 hours', scan: 'certificates/ceim-accounting.jpg' },
+            { date: '2007-06-27', topic: 'business', title: 'Introduction to Marketing', issuer: 'Universidad Politécnica de Madrid (GIO-ETSIT)', note: '100 hours' },
+            { date: '2007-06-11', topic: 'lang',     title: 'German — Elementary Certificate', issuer: 'Escuela Oficial de Idiomas, San Fernando de Henares' },
+            { date: '2007-06-11', topic: 'lang',     title: 'English — Elementary Certificate', issuer: 'Escuela Oficial de Idiomas, San Fernando de Henares' },
+            { date: '2007-05-24', topic: 'business', title: 'Customer Service', issuer: 'IFES · UGT Madrid', note: '38 hours', scan: 'certificates/ifes-customer.jpg' },
+            { date: '2006-10-16', topic: 'people',   title: 'LiderA Seminars: Young University Professional', issuer: 'Comunidad de Madrid', note: '8 hours', scan: 'certificates/lidera.jpg' },
+            { date: '2004-05-19', topic: 'lang',     title: 'German as a Foreign Language — Mittelstufe II intensive', issuer: 'ifa — Institut für Auslandsbeziehungen, Stuttgart', note: '205 units · overall grade: very good', scan: 'certificates/ifa-german-2004.jpg' },
+            { date: '2004-01-19', topic: 'degree',   title: 'Telecommunication Engineering degree (Ingeniera de Telecomunicación)', issuer: 'Universidad Politécnica de Madrid', scan: 'certificates/upm-telecom.jpg' },
+            { date: '2003-09-16', topic: 'degree',   title: 'Master of Science (M.Sc.) in Information Technology — INFOTECH', issuer: 'Universität Stuttgart', scan: 'certificates/stuttgart-msc.jpg' },
+            { date: '2002-08-09', topic: 'lang',     title: 'German as a Foreign Language — summer course', issuer: 'ifa — Institut für Auslandsbeziehungen, Stuttgart', note: '50 units', scan: 'certificates/ifa-german-2002.jpg' },
+            { date: '2001-07-10', topic: 'tech',     title: 'Mastering Microsoft Visual Basic 6 Fundamentals (MOC-1303)', issuer: 'Microsoft Certified Technical Education Center', scan: 'certificates/microsoft-vb6.jpg' },
+            { date: '2001-03-26', topic: 'lang',     title: 'TOEFL (computer-based test)', issuer: 'ETS', note: 'Total score 257 / 300' }
+        ];
+
+        (function () {
+            var MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            var timeline = document.getElementById('timeline');
+            var filters = document.getElementById('filters');
+            var active = 'all';
+
+            function el(tag, cls, text) {
+                var e = document.createElement(tag);
+                if (cls) e.className = cls;
+                if (text !== undefined) e.textContent = text;
+                return e;
+            }
+
+            function year(c) { return c.date.slice(0, 4); }
+
+            // '2010-04-15' -> '15 Apr', '2021-07' -> 'Jul', '2024' -> ''
+            function dayLabel(c) {
+                var p = c.date.split('-');
+                if (p.length === 1) return '';
+                var m = MONTHS[parseInt(p[1], 10) - 1];
+                return p.length === 3 ? parseInt(p[2], 10) + ' ' + m : m;
+            }
+
+            CERTS.sort(function (a, b) { return a.date < b.date ? 1 : a.date > b.date ? -1 : 0; });
+
+            // Header numbers
+            var years = CERTS.map(year).map(Number);
+            var first = Math.min.apply(null, years), last = Math.max.apply(null, years);
+            document.getElementById('stat-count').textContent = CERTS.length;
+            document.getElementById('stat-years').textContent = last - first;
+            document.getElementById('stat-span').textContent = first + ' — ' + last;
+            var issuers = {};
+            CERTS.forEach(function (c) { issuers[c.issuer.split(' · ')[0]] = true; });
+            document.getElementById('stat-issuers').textContent = Object.keys(issuers).length;
+
+            // Filter chips
+            function chip(key, label, count, icon) {
+                var b = el('button', 'chip text-xs font-bold px-3 py-1.5 rounded-full border border-slate-700 bg-slate-800/60 text-slate-300 hover:border-pink-500 transition');
+                b.type = 'button';
+                b.setAttribute('aria-pressed', key === active ? 'true' : 'false');
+                if (icon) { b.appendChild(el('i', 'fas ' + icon + ' mr-1.5')); }
+                b.appendChild(document.createTextNode(label + ' '));
+                b.appendChild(el('span', 'opacity-60 font-normal', String(count)));
+                b.addEventListener('click', function () { active = key; render(); });
+                return b;
+            }
+
+            function card(c) {
+                var t = TOPICS[c.topic];
+                var d = el('div', 'cert bg-slate-800/40 p-3 rounded-lg border border-slate-800 text-xs');
+                var top = el('div', 'flex justify-between items-center gap-2 mb-1.5');
+                var badge = el('span', 'text-[9px] px-1.5 py-0.5 rounded-full font-bold border ' + t.badge);
+                badge.appendChild(el('i', 'fas ' + t.icon + ' mr-1'));
+                badge.appendChild(document.createTextNode(t.label));
+                top.appendChild(badge);
+                top.appendChild(el('span', 'text-[10px] text-slate-500 font-semibold whitespace-nowrap', dayLabel(c)));
+                d.appendChild(top);
+                d.appendChild(el('span', 'font-bold text-white block text-[13px] leading-snug', c.title));
+                d.appendChild(el('span', 'text-slate-400 text-[11px] block mt-0.5', c.issuer));
+                if (c.note) d.appendChild(el('span', t.text + ' text-[10px] block mt-1', c.note));
+                if (c.url) {
+                    var a = el('a', 'inline-block mt-1.5 text-[10px] font-semibold text-slate-400 hover:text-pink-400 underline decoration-slate-600');
+                    a.href = c.url; a.target = '_blank'; a.rel = 'noopener';
+                    a.appendChild(el('i', 'fas fa-arrow-up-right-from-square mr-1'));
+                    a.appendChild(document.createTextNode('Verify certificate'));
+                    a.addEventListener('click', function (e) { e.stopPropagation(); });
+                    d.appendChild(a);
+                }
+                if (c.scan) {
+                    d.classList.add('has-scan');
+                    d.tabIndex = 0;
+                    d.setAttribute('role', 'button');
+                    d.appendChild(el('span', 'text-slate-500 text-[10px] block mt-1.5')).innerHTML = '<i class="fas fa-image mr-1"></i>View certificate';
+                    var open = function () { showScan(c); };
+                    d.addEventListener('click', open);
+                    d.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } });
+                }
+                return d;
+            }
+
+            function render() {
+                filters.replaceChildren();
+                filters.appendChild(chip('all', 'All', CERTS.length));
+                Object.keys(TOPICS).forEach(function (k) {
+                    var n = CERTS.filter(function (c) { return c.topic === k; }).length;
+                    if (n) filters.appendChild(chip(k, TOPICS[k].label, n, TOPICS[k].icon));
+                });
+
+                timeline.replaceChildren();
+                var shown = CERTS.filter(function (c) { return active === 'all' || c.topic === active; });
+                document.getElementById('empty').classList.toggle('hidden', shown.length > 0);
+                var block = null, grid = null, current = null;
+                shown.forEach(function (c) {
+                    if (year(c) !== current) {
+                        current = year(c);
+                        block = el('section', 'year-block');
+                        block.appendChild(el('span', 'year-dot'));
+                        block.appendChild(el('h2', 'font-black text-2xl text-white mb-3', current));
+                        grid = el('div', 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3');
+                        block.appendChild(grid);
+                        timeline.appendChild(block);
+                    }
+                    grid.appendChild(card(c));
+                });
+            }
+
+            // Scan viewer
+            var box = document.getElementById('lightbox'), boxImg = document.getElementById('lightbox-img');
+            function showScan(c) { boxImg.src = c.scan; boxImg.alt = c.title; box.classList.add('show'); }
+            function hideScan() { box.classList.remove('show'); boxImg.src = ''; }
+            box.addEventListener('click', hideScan);
+            document.addEventListener('keydown', function (e) { if (e.key === 'Escape') hideScan(); });
+
+            render();
+        })();
+    </script>
+
+</body>
+</html>
